@@ -1,4 +1,4 @@
-Next.js and MongoDB based website to create and mange Boolean String.
+React, Node.js, GraphQL and MongoDB based website to create and mange Boolean String.
 # Getting Started with Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
