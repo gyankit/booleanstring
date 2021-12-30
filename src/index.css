@@ -1,13 +1,297 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: 'Roboto Slab', serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.heading {
+  margin-top: 5rem;
 }
+
+.heading h3 {
+  margin-bottom: 0%;
+  padding: 0 2.5rem;
+}
+
+.container {
+  margin: 1rem 5rem;
+}
+
+.home .container {
+  margin: 7rem 5rem;
+}
+
+.list {
+  list-style: none;
+}
+
+.item {
+  margin: 1rem 2rem;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #20302d;
+  background-color: #e7c69d;
+  cursor: pointer;
+}
+
+.item a {
+  color: #20302d;
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.item:hover, 
+.item:focus, 
+.item:active {
+  margin: 1rem 2rem;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #20302d;
+  background-color: #20302d;
+}
+
+.item:hover > a, 
+.item:focus > a, 
+.item:active > a {
+  color: skyblue;
+}
+
+.header {
+  position: fixed;
+  background-color: #20302d;
+  top: 0;
+  left: 0;
+  height: 4.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-main {
+  display: flex;
+  padding-left: 1rem;
+}
+
+.title {
+  color: #e7aa5f;
+}
+
+.header-subtitle {
+  color:#e7c69d;
+  font-weight: 300;
+  padding: .25rem .5rem;
+}
+
+.header-navbar ul {
+  display: flex;
+  list-style: none;
+  padding: .5rem 1rem;
+}
+
+.header-navbar li {
+  padding-right: .5rem;
+}
+
+.header-navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+.header-navbar a:hover, .header-navbar a:active,
+.header-navbar li:hover, .header-navbar li:active {
+  color: #e7aa5f;
+  font-weight: 400;
+}
+
+.header-navbar .active {
+  color: skyblue;
+}
+
+.login {
+  width: 30rem;
+  max-width: 75%;
+  margin: 8rem auto;
+  border: 2px solid #20302d;
+  border-radius: .2rem;
+  background-color: #20302d;
+}
+
+.user {
+  margin: 4rem auto !important;
+}
+
+.login .title {
+  text-align: center;
+  font-size: 2rem;
+  margin: 0;
+}
+
+
+.form {
+  padding: 0.5rem 1rem;
+}
+
+.form-control {
+  margin-bottom: 0.5rem;;
+}
+
+
+label {
+  width: 100%;
+  color:#e7c69d;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+input, textarea, select {
+  display: block;
+  padding: 0.5rem;
+  border: 1px solid #20302d;
+  border-radius: 0.2rem;
+}
+
+.form-control input {
+  width: 95%;
+}
+
+.form-control textarea {
+  width: 100%;
+}
+
+.form-control input:hover, .form-control input:active {
+  border: 1px solid skyblue;
+}
+
+.select {
+  font-size: 1rem;
+}
+
+.profile .form-control label {
+  color: #e7aa5f;
+}
+
+.error {
+  color: red;
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 0.2rem 0.5rem;
+  background: #f0cdcd;
+  border-radius: 0.2rem;
+}
+
+.success {
+  color: #015f0e;
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 0.2rem 0.5rem;
+  background: #cdf0d5;
+  border-radius: 0.2rem;
+}
+
+.button {
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin: 0.2rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.2rem;
+  
+}
+
+.button-green {
+  color: white;
+  background-color: #008000; 
+  box-shadow: 1px 1px 5px #008000;
+}
+
+.button-green:hover, .button-green:active {
+  background-color: #08aa08;
+}
+
+.button-red {
+  color: white;
+  background-color: #f71b1b; 
+  box-shadow: 1px 1px 5px #f71b1b;
+}
+
+.button-red:hover, .button-red:active {
+  background-color: #f71b1b;
+}
+
+.button-default {
+  color: black;
+  background-color: #e7aa5f; 
+  box-shadow: 1px 1px 5px #e7aa5f;
+}
+
+.button-default:hover, .button-default:active {
+  background-color: #e7c69d;;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.switch {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -3.2rem;
+  margin-right: 2.5rem;
+}
+
+.switch button {
+  font-weight: 700;
+}
+
+.lds-dual-ring {
+  display: flex;
+  width: 5rem;
+  height: 5rem;
+  margin: 5rem auto;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  margin: 0.5px;
+  border-radius: 50%;
+  border: 0.5rem solid #24dae7;
+  border-color: #24dae7 transparent #24dae7 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.table {
+  width: 100%;
+  text-align: center;
+  border-spacing: 0px;
+  border: 1px solid #20302d;
+  overflow-x: scroll;
+}
+
+.table thead {
+  background-color: #20302d;
+  color: #e7aa5f;
+  border: none;
+}
+
+.table tr {
+  padding: 1rem;
+  height: 2.5rem;
+}
+
