@@ -65,15 +65,15 @@ const graphQlSchema = buildSchema(`
 
     type RootQuery {
         login(email: String!, password: String!): AuthData
-        user(id: String): [User]
-        booleanString(id: String, slag: String, state: Boolean): [BooleanString]
+        user(_id: String): [User]
+        booleanString(_id: String, slag: String, state: Boolean): [BooleanString]
     }
 
     type RootMutation {
         createUser(userInput: UserInput!): User
-        updateUser(id: String!, update: UserUpdate!): User
+        updateUser(_id: String!, update: UserUpdate!): User
         createBooleanString(stringInput: StringInput!): BooleanString
-        updateBooleanString(id: String!, update: StringUpdate!): BooleanString
+        updateBooleanString(_id: String!, update: StringUpdate!): BooleanString
     }
 
     schema{

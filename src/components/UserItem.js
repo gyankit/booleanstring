@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import api from '../helper/api.json'
+import fetchApi from '../helper/fetch-api'
 
 class UserItem extends Component {
 
@@ -17,7 +17,7 @@ class UserItem extends Component {
         const request = {
             query: `
             mutation {
-                updateUser(id: "${this.state.val._id}", update: { active: ${active} }) {
+                updateUser(_id: "${this.state.val._id}", update: { active: ${active} }) {
                     _id, name, email, mobile, active, type
                 }
             }
@@ -29,7 +29,7 @@ class UserItem extends Component {
         const request = {
             query: `
             mutation {
-                updateUser(id: "${this.state.val._id}", update: { type: ${type} }) {
+                updateUser(_id: "${this.state.val._id}", update: { type: ${type} }) {
                     _id, name, email, mobile, active, type
                 }
             }
@@ -41,7 +41,7 @@ class UserItem extends Component {
         const request = {
             query: `
             mutation {
-                updateUser(id: "${this.state.val._id}", update: {del: ${del}}) {
+                updateUser(_id: "${this.state.val._id}", update: {del: ${del}}) {
                     _id, name, email, mobile, active, type
                 }
             }
@@ -49,26 +49,20 @@ class UserItem extends Component {
         this.apicall(request, true);
     }
 
-    apicall = (request, reload) => {
-        fetch(api.url, {
-            method: api.method,
-            headers: api.headers,
-            body: JSON.stringify(request)
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.errors) {
-                    console.log(result.errors[0].message)
-                } else {
-                    if (reload) {
-                        this.props.onChange();
-                    } else {
-                        this.setState({ val: result.data.updateUser })
-                        this.render();
-                    }
-                }
-            })
-            .catch(err => console.log(err));
+    apicall = async (request, reload) => {
+        try {
+            const res = await fetchApi(request);
+            if (res.errors) {
+                console.log(res.errors[0].message)
+            } else if (reload) {
+                this.props.onChange();
+            } else {
+                this.setState({ val: res.data.updateUser })
+                this.render();
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     handleTypeChange = (e) => {

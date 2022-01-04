@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import api from '../helper/api.json'
+import fetchApi from '../helper/fetch-api'
 
 class BooleanStringItem extends Component {
 
@@ -16,7 +16,7 @@ class BooleanStringItem extends Component {
         const request = {
             query: `
             mutation {
-                updateBooleanString(id: "${this.state.val._id}", update: { booleanString: "${this.state.val.booleanString}", slag: "${this.state.val.slag}", state: ${active} }) {
+                updateBooleanString(_id: "${this.state.val._id}", update: { booleanString: "${this.state.val.booleanString}", slag: "${this.state.val.slag}", state: ${active} }) {
                     _id, booleanString, slag, position, skill, location, state
                 }
             }
@@ -28,7 +28,7 @@ class BooleanStringItem extends Component {
         const request = {
             query: `
             mutation {
-                updateBooleanString(id: "${this.state.val._id}", update: { booleanString: "${this.state.val.booleanString}", slag: "${this.state.val.slag}", state: ${this.state.val.state}, del: ${del}}) {
+                updateBooleanString(_id: "${this.state.val._id}", update: { booleanString: "${this.state.val.booleanString}", slag: "${this.state.val.slag}", state: ${this.state.val.state}, del: ${del}}) {
                     _id, booleanString, slag, position, skill, location, state
                 }
             }
@@ -36,26 +36,20 @@ class BooleanStringItem extends Component {
         this.apicall(request, true);
     }
 
-    apicall = (request, reload) => {
-        fetch(api.url, {
-            method: api.method,
-            headers: api.headers,
-            body: JSON.stringify(request)
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.errors) {
-                    console.log(result.errors[0].message)
-                } else {
-                    if (reload) {
-                        this.props.onChange();
-                    } else {
-                        this.setState({ val: result.data.updateBooleanString })
-                        this.render();
-                    }
-                }
-            })
-            .catch(err => console.log(err));
+    apicall = async (request, reload) => {
+        try {
+            const res = await fetchApi(request);
+            if (res.errors) {
+                console.log(res.errors[0].message)
+            } else if (reload) {
+                this.props.onChange();
+            } else {
+                this.setState({ val: res.data.updateBooleanString })
+                this.render();
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     handleTypeChange = (e) => {

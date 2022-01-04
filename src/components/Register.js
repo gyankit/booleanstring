@@ -1,42 +1,46 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
-import api from '../helper/api.json'
+import Notification from './notification'
+import fetchApi from '../helper/fetch-api'
 
 const Register = (props) => {
 
-    const [error, setError] = useState(null);
-    const [name, setName] = useState("");
-    const [mobile, setMobile] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [cpassword, setCPassword] = useState("");
+    const [notice, setNotice] = useState({});
+    const nameRef = useRef(undefined);
+    const mobileRef = useRef(undefined);
+    const emailRef = useRef(undefined);
+    const passwordRef = useRef(undefined);
+    const cpasswordRef = useRef(undefined);
 
-    const formSubmit = (e) => {
+    const formSubmit = async (e) => {
         e.preventDefault();
-        if (password === cpassword) {
+        if (passwordRef.current.value === cpasswordRef.current.value) {
             const request = {
                 query: `mutation {
-                    createUser(userInput: { name: "${name}", email: "${email}", mobile: "${mobile}", password: "${password}" }) {
-                        _id, name
+                    createUser(userInput: { name: "${nameRef.current.value}", email: "${emailRef.current.value}", mobile: "${mobileRef.current.value}", password: "${passwordRef.current.value}" }) {
+                        _id
                     }
                 }`
             }
-            fetch(api.url, {
-                method: api.method,
-                headers: api.headers,
-                body: JSON.stringify(request)
-            })
-                .then(res => res.json())
-                .then(result => {
-                    if (result.errors) {
-                        setError(result.errors[0].message);
-                    } else {
-                        props.onChange();
-                    }
-                })
-                .catch(err => console.log(err));
+            try {
+                const res = await fetchApi(request);
+                if (res.errors) {
+                    setNotice({
+                        error: true,
+                        msg: res.errors[0].message
+                    });
+                } else {
+                    props.onChange();
+                }
+            } catch (err) {
+                console.error(err)
+            }
         } else {
-            setError('Password not Matching')
+            setNotice()
+            setNotice({
+                error: true,
+                msg: 'Password not Matching'
+            });
         }
     }
 
@@ -44,31 +48,27 @@ const Register = (props) => {
         <div className='login user'>
             <h3 className='title'>Add User</h3>
             <hr />
-            {
-                error ?
-                    <div className='error'>{error}</div>
-                    : ''
-            }
+            <Notification className={notice.error ? 'error' : 'success'} notice={notice.msg} />
             <form className='form' onSubmit={formSubmit}>
                 <div className='form-control'>
                     <label htmlFor='name'>Full Name</label>
-                    <input type='text' value={name} onChange={e => setName(e.target.value)} required />
+                    <input type='text' ref={nameRef} required />
                 </div>
                 <div className='form-control'>
                     <label htmlFor='mobile'>Mobile</label>
-                    <input type='text' value={mobile} onChange={e => setMobile(e.target.value)} required />
+                    <input type='text' ref={mobileRef} required />
                 </div>
                 <div className='form-control'>
                     <label htmlFor='email'>Email</label>
-                    <input type='email' value={email} onChange={e => setEmail(e.target.value)} required />
+                    <input type='email' ref={emailRef} required />
                 </div>
                 <div className='form-control'>
                     <label htmlFor='password'>Password</label>
-                    <input type='password' value={password} onChange={e => setPassword(e.target.value)} required />
+                    <input type='password' ref={passwordRef} required />
                 </div>
                 <div className='form-control'>
                     <label htmlFor='cpassword'>Confirm Password</label>
-                    <input type='text' value={cpassword} onChange={e => setCPassword(e.target.value)} required />
+                    <input type='text' ref={cpasswordRef} required />
                 </div>
                 <div>
                     <button className='button button-green' type='submit'>Submit</button>

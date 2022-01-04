@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-import Heading from '../components/Heading'
-import Register from '../components/Register'
-import UserList from '../components/UserList'
+import Heading from '../components/heading'
+import Register from '../components/register'
+import UserList from '../components/userList'
 
 const User = () => {
 

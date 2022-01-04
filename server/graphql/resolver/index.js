@@ -1,7 +1,7 @@
-const userResolver = require('./user');
-const booleanStringResolver = require('./booleanString');
+const queryResolver = require('./query');
+const mutationResolver = require('./mutation');
 
 module.exports = {
-    ...userResolver,
-    ...booleanStringResolver
+    ...queryResolver,
+    ...mutationResolver
 };

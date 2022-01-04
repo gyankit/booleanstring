@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 
-import Error from '../components/Error'
+import Notification from '../components/notification'
 import api from '../helper/api.json'
 
 const Home = () => {
@@ -42,10 +42,10 @@ const Home = () => {
                         <div className="lds-dual-ring"></div>
                         :
                         error ?
-                            <Error error={error} />
+                            <Notification isError={true} error={error} />
                             :
                             items.length === 0 ?
-                                <Error error={"No Data Available"} />
+                                <Notification isError={true} error={"No Data Available"} />
                                 :
                                 <div className='list'>
                                     {

@@ -1,73 +1,82 @@
-import React, { useState, useEffect } from 'react'
-import Heading from '../components/Heading'
-import Error from '../components/Error'
-import api from '../helper/api.json'
+import React, { useState, useEffect, useRef } from 'react'
+import Heading from '../components/heading'
+import Notification from '../components/notification'
+import fetchApi from '../helper/fetch-api'
 
 const Profile = () => {
 
+    const passRef = useRef('');
+    const cpassRef = useRef('');
     const [user, setUser] = useState(null);
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [password, setPassword] = useState('');
+    const [notice, setNotice] = useState({});
     const userId = "61cd3605ff4a31bba8088f7e";
+
+    const apiCall = async (request, update = false) => {
+        try {
+            const res = await fetchApi(request);
+            if (res.errors) {
+                setNotice({
+                    error: true,
+                    msg: res.errors[0].message
+                });
+            }
+            if (update) {
+                setUser(res.data.updateUser);
+                setNotice({
+                    error: false,
+                    msg: 'Profile Updated!'
+                });
+            } else {
+                setUser(res.data.user[0]);
+            }
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     useEffect(() => {
         const request = {
             query: `query {
-                user(id: "${userId}") {
-                    _id, name, email, mobile, password
+                user(_id: "${userId}") {
+                    _id, name, email, mobile
                 }
             }`
         };
-        fetch(api.url, {
-            method: api.method,
-            headers: api.headers,
-            body: JSON.stringify(request)
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.errors) {
-                    setError(result.errors[0].message);
-                }
-                setUser({ ...result.data.user[0], password: '' });
-                setLoading(false);
-            })
-            .catch(err => console.log(err));
-    }, [loading]);
+        apiCall(request);
+    }, []);
 
 
     const formSubmit = (e) => {
         e.preventDefault();
-        let request = {
-            query: `mutation {
-                updateUser(id: "${userId}", update: { name: "${user.name}", email: "${user.email}", mobile: "${user.mobile}" }) {
-                    _id
+
+        if (passRef.current.value !== '') {
+            if (passRef.current.value !== cpassRef.current.value) {
+                setNotice({
+                    error: true,
+                    msg: 'Password Not Matching!'
+                });
+            } else {
+                const request = {
+                    query: `mutation {
+                        updateUser(_id: "${userId}", update: { name: "${user.name}", email: "${user.email}", mobile: "${user.mobile}", password: "${passRef.current.value}" }) {
+                            _id, name, email, mobile
+                        }
+                    }`
                 }
-            }`
-        }
-        if (user.password === password && user.password !== '') {
-            request = {
+                apiCall(request, true);
+            }
+        } else {
+            const request = {
                 query: `mutation {
-                    updateUser(id: "${userId}", update: { name: "${user.name}", email: "${user.email}", mobile: "${user.mobile}", password: "${user.password}" }) {
-                        _id
+                    updateUser(_id: "${userId}", update: { name: "${user.name}", email: "${user.email}", mobile: "${user.mobile}"}) {
+                        _id, name, email, mobile
                     }
                 }`
             }
+            apiCall(request, true);
         }
-        fetch(api.url, {
-            method: api.method,
-            headers: api.headers,
-            body: JSON.stringify(request)
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.errors) {
-                    setError(result.errors[0].message);
-                } else {
-                    setLoading(true);
-                }
-            })
-            .catch(err => console.log(err));
     }
 
     return (
@@ -77,10 +86,8 @@ const Profile = () => {
                 {
                     loading ?
                         <div className="lds-dual-ring"></div>
-                        :
-                        error ?
-                            <Error error={error} />
-                            :
+                        : <>
+                            <Notification className={notice.error ? 'error' : 'success'} notice={notice.msg} />
                             <form className='form profile' onSubmit={formSubmit}>
                                 <div className='form-control'>
                                     <label htmlFor='id'>ID</label>
@@ -100,16 +107,17 @@ const Profile = () => {
                                 </div>
                                 <div className='form-control'>
                                     <label htmlFor='password'>Password</label>
-                                    <input type='password' value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
+                                    <input type='password' ref={passRef} />
                                 </div>
                                 <div className='form-control'>
                                     <label htmlFor='cpassword'>Confirm Password</label>
-                                    <input type='text' value={password} onChange={(e) => setPassword(e.target.value)} />
+                                    <input type='text' ref={cpassRef} />
                                 </div>
                                 <div>
                                     <button className='button button-green' type='submit'>Update</button>
                                 </div>
                             </form>
+                        </>
                 }
             </div>
         </React.Fragment>

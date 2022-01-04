@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import Heading from '../components/Heading'
-import Error from '../components/Error'
+import Heading from '../components/heading'
+import Notification from '../components/notification'
 import api from '../helper/api.json'
 
 const BooleanString = () => {
@@ -45,7 +45,7 @@ const BooleanString = () => {
                     loading ? <div className="lds-dual-ring"></div>
                         :
                         error !== null ?
-                            <Error error={error} />
+                            <Notification isError={true} error={error} />
                             :
                             <div className='list'>
                                 <div className='item'> BooleanString : <span>{item.booleanString}</span> </div>

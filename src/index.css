@@ -157,11 +157,8 @@ input, textarea, select {
   width: 95%;
 }
 
-.form-control textarea {
-  width: 100%;
-}
-
-.form-control input:hover, .form-control input:active {
+.form-control input:hover, .form-control input:active,
+.form-control textarea:hover, .form-control textarea:active {
   border: 1px solid skyblue;
 }
 
@@ -171,6 +168,29 @@ input, textarea, select {
 
 .profile .form-control label {
   color: #e7aa5f;
+}
+
+.data-entry {
+  padding: 0.5rem 0;
+  display: flex;
+}
+
+.data-entry-input  {
+  flex-grow: 3;
+}
+
+/* .data-entry-button {
+  flex-grow: 1;
+} */
+
+.data-entry-input textarea {
+  width: 90%;
+}
+
+
+.data-entry-button button {
+  display: block;
+  margin: 0.5rem auto;
 }
 
 .error {
@@ -214,12 +234,12 @@ input, textarea, select {
 
 .button-red {
   color: white;
-  background-color: #f71b1b; 
-  box-shadow: 1px 1px 5px #f71b1b;
+  background-color: #e20202; 
+  box-shadow: 1px 1px 5px #e20202;
 }
 
 .button-red:hover, .button-red:active {
-  background-color: #f71b1b;
+  background-color: rgb(243, 42, 42);
 }
 
 .button-default {

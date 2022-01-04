@@ -2,9 +2,19 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../../models/user');
-const { singleResponse, multiResponse } = require('../../helper/response');
+const BooleanString = require('../../models/booleanString');
+const { multiResponse } = require('../../helper/response');
 
-const userResolver = {
+const queryResolver = {
+
+    booleanString: async (args) => {
+        try {
+            const booleanString = await BooleanString.find(args);
+            return multiResponse(booleanString);
+        } catch (err) {
+            throw err;
+        }
+    },
 
     user: async (args) => {
         try {
@@ -31,7 +41,7 @@ const userResolver = {
                 throw new Error('Login is disable! Please check with Administrator.')
             }
             const tokenData = {
-                id: user.id,
+                _id: user.id,
                 type: user.type
             }
             const token = jwt.sign({ data: tokenData }, 'specialsecretkey', { expiresIn: '2h' });
@@ -42,44 +52,7 @@ const userResolver = {
         catch (err) {
             throw err;
         }
-    },
-
-    createUser: async (args) => {
-        try {
-            const hashPassword = await bcrypt.hash(args.userInput.password, 12);
-            const user = new User({
-                name: args.userInput.name,
-                email: args.userInput.email,
-                mobile: args.userInput.mobile,
-                password: hashPassword,
-            });
-            const result = await user.save();
-            return singleResponse(result);
-        }
-        catch (err) {
-            throw err;
-        }
-    },
-
-    updateUser: async (args) => {
-        console.log(args)
-        try {
-            let user = await User.findById(args.id);
-            if (user.type === 0) {
-                throw new Error('Not Authorized');
-            }
-            if (args.update.del) {
-                await User.deleteOne({ "_id": args.id });
-            } else {
-                await User.updateOne({ "_id": args.id }, args.update);
-                user = await User.findById(args.id);
-            }
-            return singleResponse(user);
-        }
-        catch (err) {
-            throw err;
-        }
     }
 }
 
-module.exports = userResolver;
+module.exports = queryResolver;

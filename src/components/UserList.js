@@ -1,14 +1,41 @@
 import React, { useEffect, useState } from 'react'
 
-import Error from './Error'
-import UserItem from './UserItem'
-import api from '../helper/api.json'
+import Notification from './notification'
+import UserItem from './userItem'
+import fetchApi from '../helper/fetch-api'
 
 const UserList = () => {
 
-    const [items, setItems] = useState([]);
-    const [error, setError] = useState(null);
+    const [users, setUsers] = useState([]);
+    const [notice, setNotice] = useState({});
     const [loading, setLoading] = useState(true);
+
+    const apiCall = async (request) => {
+        try {
+            const res = await fetchApi(request);
+            if (res.errors) {
+                setNotice({
+                    error: true,
+                    msg: res.errors[0].message
+                });
+            }
+            setUsers(res.data.user);
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const refresh = () => {
+        const request = {
+            query: `query {
+                user {
+                    _id, name, email, mobile, type, active
+                }
+            }`
+        };
+        apiCall(request);
+    }
 
     useEffect(() => {
         const request = {
@@ -18,31 +45,16 @@ const UserList = () => {
                 }
             }`
         };
-        fetch(api.url, {
-            method: api.method,
-            headers: api.headers,
-            body: JSON.stringify(request)
-        })
-            .then(res => res.json())
-            .then(result => {
-                setLoading(false);
-                if (result.errors) {
-                    setError(result.errors[0].message);
-                }
-                setItems(result.data.user);
-            })
-            .catch(err => console.log(err));
-    }, [loading]);
+        apiCall(request);
+    }, []);
 
     return (
         <div>
             {
                 loading ?
                     <div className="lds-dual-ring"></div>
-                    :
-                    error ?
-                        <Error error={error} />
-                        :
+                    : <>
+                        <Notification className={notice.error ? 'error' : 'success'} notice={notice.msg} />
                         <table className='table'>
                             <thead>
                                 <tr>
@@ -59,12 +71,13 @@ const UserList = () => {
                             </thead>
                             <tbody>
                                 {
-                                    items.map((val, key) =>
-                                        <UserItem key={key} value={val} idx={key} onChange={() => setLoading(true)} />
+                                    users.map((val, key) =>
+                                        <UserItem key={key} value={val} idx={key} onChange={() => refresh()} />
                                     )
                                 }
                             </tbody>
                         </table>
+                    </>
             }
         </div>
     )

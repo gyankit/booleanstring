@@ -5,6 +5,7 @@ module.exports = {
             _id: res.id,
             password: null
         }
+        // console.log(response);
         return response;
     },
 
@@ -15,8 +16,8 @@ module.exports = {
                 _id: res.id,
                 password: null
             }
-        }
-        );
+        });
+        // console.log(response);
         return response;
     }
 }
