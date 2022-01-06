@@ -17,16 +17,14 @@ const graphQlSchema = buildSchema(`
         token: String!
         tokenExpire: Int!
     }
-
+    
     type BooleanString {
-        _id: ID!
-        position: String
-        skill: String
-        location: String
-        booleanString: String
-        slag: String
+        _id: ID
+        field: [String]
+        booleanString: String!
         state: Boolean
     }
+    
 
     input UserInput {
         name: String!
@@ -46,19 +44,13 @@ const graphQlSchema = buildSchema(`
     }
 
     input StringInput {
-        position: String!
-        skill: String!
-        location: String!
+        field: [String]
         booleanString: String!
-        slag: String!
     }
 
     input StringUpdate {
-        position: String
-        Skill: String
-        location: String
-        booleanString: String!
-        slag: String!
+        field: [String]
+        booleanString: String
         state: Boolean!
         del: Boolean
     }

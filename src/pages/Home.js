@@ -1,38 +1,81 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
 
 import Notification from '../components/notification'
-import api from '../helper/api.json'
+import BooleanString from '../components/booleanString'
+import fetchApi from '../helper/fetch-api'
 
 const Home = () => {
 
     const [items, setItems] = useState([]);
-    const [error, setError] = useState(null);
+    const [notice, setNotice] = useState({});
     const [loading, setLoading] = useState(true);
+    // const [search, setSearch] = useState(false);
+    const [fields, setFields] = useState([{ data: '' }]);
+    const [datas, setDatas] = useState([{ data: '' }]);
+
+
+    const apiCall = async (request) => {
+        try {
+            const res = await fetchApi(request);
+            if (res.errors) {
+                setNotice({
+                    error: true,
+                    msg: res.errors[0].message
+                });
+            } else if (res.data.booleanString.length === 0) {
+                setNotice({
+                    error: true,
+                    msg: "No Data Available"
+                });
+            } else {
+                setDatas(res.data.booleanString);
+                setItems(res.data.booleanString);
+            }
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     useEffect(() => {
         const request = {
             query: `query {
                 booleanString(state: ${true}) {
-                    booleanString, slag
+                    _id, booleanString, field
                 }
             }`
         };
-        fetch(api.url, {
-            method: api.method,
-            headers: api.headers,
-            body: JSON.stringify(request)
-        })
-            .then(res => res.json())
-            .then(result => {
-                setLoading(false);
-                if (result.errors) {
-                    setError(result.errors[0].message);
+        apiCall(request);
+    }, []);
+
+    const handleChange = (i, e) => {
+        let newValues = [...fields];
+        newValues[i][e.target.name] = e.target.value.toUpperCase();
+        setFields(newValues);
+
+        const newData = newValues.map(x => {
+            let searchString = []
+            datas.map(e => {
+                if (e.booleanString.search(x.data) >= 0) {
+                    searchString = [...searchString, e]
                 }
-                setItems(result.data.booleanString);
+                return searchString
             })
-            .catch(err => console.log(err));
-    }, [loading]);
+            return searchString
+        })
+
+        setItems(newData[0])
+    }
+
+    const addFormFields = () => {
+        setFields([...fields, { data: '' }]);
+    }
+
+    const removeFormFields = (i) => {
+        let newValues = [...fields];
+        newValues.splice(i, 1);
+        setFields(newValues);
+    }
 
     return (
         <div className='home'>
@@ -41,21 +84,41 @@ const Home = () => {
                     loading ?
                         <div className="lds-dual-ring"></div>
                         :
-                        error ?
-                            <Notification isError={true} error={error} />
-                            :
-                            items.length === 0 ?
-                                <Notification isError={true} error={"No Data Available"} />
-                                :
+                        notice.error ?
+                            <Notification className={'error'} notice={notice.msg} />
+                            : <>
+                                {/* <div className='switch'>
+                                    <button className='button button-default' onClick={() => setSearch(!search)}>{search ? 'Close Search Bar' : 'Open Search Bar'}</button>
+                                </div> */}
+                                <div className='searchform'>
+                                    {
+                                        fields.map((elm, idx) => {
+                                            return (
+                                                <div className='search' key={idx}>
+                                                    <div className='search-input'>
+                                                        <input placeholder='Search Your Boolean String ...' name='data' value={elm.data} onChange={(e) => handleChange(idx, e)} />
+                                                    </div>
+                                                    <div className='search-button'>
+                                                        {
+                                                            fields.length !== 1 && <button className='button button-red' onClick={() => removeFormFields(idx)} type='button'>Remove Search Field</button>
+                                                        }
+                                                        {
+                                                            fields.length - 1 === idx && <button className='button button-green' onClick={addFormFields} type='button'>Add Search Field</button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
                                 <div className='list'>
                                     {
                                         items.map((val, key) =>
-                                            <div className='item' key={key}>
-                                                <Link to={val.slag}>{val.booleanString}</Link>
-                                            </div>
+                                            <BooleanString key={key} val={val} />
                                         )
                                     }
                                 </div>
+                            </>
                 }
             </div>
         </div>

@@ -7,7 +7,6 @@ import User from './pages/user';
 import Verify from './pages/verify';
 import Profile from './pages/profile'
 import DataEntry from './pages/data-entry'
-import BooleanString from './pages/booleanString'
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/user" element={<User />} />
-        <Route path="/:slag" element={<BooleanString />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/data-entry" element={<DataEntry />} />
         <Route path="/verification" element={<Verify />} />

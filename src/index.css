@@ -19,8 +19,11 @@ body {
   margin: 1rem 5rem;
 }
 
-.home .container {
-  margin: 7rem 5rem;
+.home {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  background-color: #20302d;
+  min-height: 100vh;
 }
 
 .list {
@@ -31,31 +34,87 @@ body {
   margin: 1rem 2rem;
   padding: 0.5rem 2rem;
   border-radius: 0.5rem;
-  border: 1px solid #20302d;
-  background-color: #e7c69d;
+  border: 1px solid #e7c69d;
+  background-color: #20302d;
   cursor: pointer;
+  color: #fff;
+  height: 1.5rem;
+  transition: height 1s;
 }
 
-.item a {
-  color: #20302d;
-  font-size: 1.5rem;
-  text-decoration: none;
+.height {
+  height: 6rem;
 }
 
 .item:hover, 
 .item:focus, 
 .item:active {
-  margin: 1rem 2rem;
-  padding: 0.5rem 2rem;
-  border-radius: 0.5rem;
-  border: 1px solid #20302d;
-  background-color: #20302d;
+  background-color: #e7c69d; 
+  color: #20302d;
+  font-weight: 600;
+  height: 6rem;
 }
 
-.item:hover > a, 
-.item:focus > a, 
-.item:active > a {
-  color: skyblue;
+.item:hover .arrow, 
+.item:focus .arrow, 
+.item:active .arrow {
+  border: solid #20302d;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.item:hover .content, 
+.item:focus .content, 
+.item:active .content {
+  display: block;
+  visibility: visible;
+}
+
+.dropdown {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdown .booleanString, .dropdown button {
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.content ul {
+  list-style: none;
+  padding: 0;
+  cursor: text;
+}
+
+.content li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.arrow {
+  padding: 3px;
+  border: solid #fff;
+  display: inline-block;
+  border-width: 0 3px 3px 0;
+  margin-left: 1rem;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.down {
+  -webkit-transform: rotate(45deg) !important;
+  transform: rotate(45deg) !important;
+}
+
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.visible {
+  display: block;
+  visibility: visible;
 }
 
 .header {
@@ -179,18 +238,35 @@ input, textarea, select {
   flex-grow: 3;
 }
 
-/* .data-entry-button {
-  flex-grow: 1;
-} */
-
 .data-entry-input textarea {
   width: 90%;
 }
 
-
 .data-entry-button button {
   display: block;
   margin: 0.5rem auto;
+}
+
+.searchform {
+ margin: 0 2rem 3rem 2rem;
+}
+.search-input {
+  margin: 0;
+  width: 100%
+}
+
+.search-button {
+  display: flex;
+  justify-content: center;
+}
+
+.search-button button {
+  width: 50%;
+}
+
+.search-input input {
+  width: 99%;
+  margin-top: 0.3rem;
 }
 
 .error {
@@ -239,7 +315,7 @@ input, textarea, select {
 }
 
 .button-red:hover, .button-red:active {
-  background-color: rgb(243, 42, 42);
+  background-color: #f32a2a;
 }
 
 .button-default {
@@ -266,6 +342,10 @@ input, textarea, select {
 
 .switch button {
   font-weight: 700;
+}
+
+.container>.switch {
+  margin-top: -2rem;
 }
 
 .lds-dual-ring {

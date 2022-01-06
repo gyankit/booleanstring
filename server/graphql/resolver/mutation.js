@@ -7,13 +7,11 @@ const { singleResponse } = require('../../helper/response');
 const mutationResolver = {
 
     createBooleanString: async (args) => {
+        console.log(args);
         try {
             const booleanString = new BooleanString({
-                position: args.stringInput.position,
-                skill: args.stringInput.skill,
-                location: args.stringInput.location,
+                field: args.stringInput.field,
                 booleanString: args.stringInput.booleanString,
-                slag: args.stringInput.slag,
             });
             const result = await booleanString.save();
             return singleResponse(result);

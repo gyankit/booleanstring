@@ -5,7 +5,7 @@ import fetchApi from '../helper/fetch-api'
 
 const Auth = () => {
 
-    const [notice, setNotice] = useState(undefined);
+    const [notice, setNotice] = useState({});
     const emailRef = useRef(undefined);
     const passwordRef = useRef(undefined);
 
@@ -22,7 +22,10 @@ const Auth = () => {
         try {
             const res = await fetchApi(request);
             if (res.errors) {
-                setNotice(res.errors[0].message);
+                setNotice({
+                    error: true,
+                    msg: res.errors[0].message
+                });
             } else {
                 console.log(res.data.login)
             }
@@ -36,7 +39,7 @@ const Auth = () => {
             <div className='login'>
                 <h3 className='title'>Sign In</h3>
                 <hr />
-                <Notification className={'error'} notice={notice} />
+                <Notification className={'error'} notice={notice.msg} />
                 <form className='form' onSubmit={formSubmit}>
                     <div className='form-control'>
                         <label htmlFor='email'>Email</label>

@@ -24,6 +24,7 @@ const Verify = () => {
                     error: true,
                     msg: "No Data Available"
                 });
+                setItems([]);
             } else {
                 setItems(res.data.booleanString);
             }
@@ -37,7 +38,7 @@ const Verify = () => {
         const request = {
             query: `query {
                 booleanString {
-                    _id, booleanString, slag, position, skill, location, state
+                    _id, booleanString, field, state
                 }
             }`
         };
@@ -48,7 +49,7 @@ const Verify = () => {
         const request = {
             query: `query {
                 booleanString {
-                    _id, booleanString, slag, position, skill, location, state
+                    _id, booleanString, field, state
                 }
             }`
         };
@@ -69,10 +70,7 @@ const Verify = () => {
                                     <tr>
                                         <th>Sl No</th>
                                         <th>Boolean String</th>
-                                        <th>Slag</th>
-                                        <th>Position</th>
-                                        <th>Skill</th>
-                                        <th>Location</th>
+                                        <th>Field</th>
                                         <th>State</th>
                                         <th>Delete</th>
                                     </tr>

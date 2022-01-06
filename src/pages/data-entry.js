@@ -12,40 +12,60 @@ const DataEntry = () => {
 
     const formSubmit = async (e) => {
         e.preventDefault();
-        console.log(fields);
-        // const request = {
-        //     query: ` mutation {
-        //         createBooleanString(stringInput: { position: "${this.state.position}", skill: "${this.state.skill}", location: "${this.state.location}", booleanString: "${this.state.booleanString}", slag: "${this.state.slag}"}) {
-        //             _id, booleanString, slag
-        //         }
-        //     }
-        // ` };
-
-        // try {
-        //     const res = await fetchApi(request);
-        //     if (res.errors) {
-        //         setNotice({
-        //             error: true,
-        //             msg: res.errors[0].message
-        //         });
-        //     } else {
-        //         setNotice({
-        //             error: false,
-        //             msg: 'Data Uploaded Successfully! Check with Administrator for Verification'
-        //         });
-        //     }
-        // } catch (err) {
-        //     console.error(err);
-        // }
+        if (preview !== '') {
+            const request = {
+                query: ` mutation {
+                    createBooleanString(stringInput: { 
+                        booleanString: ${JSON.stringify(preview)},
+                        field: ${JSON.stringify(fields.map(e => `${e.data}`))}
+                    }) {
+                        _id, booleanString
+                    }
+                }`
+            };
+            try {
+                const res = await fetchApi(request);
+                if (res.errors) {
+                    setNotice({
+                        error: true,
+                        msg: res.errors[0].message
+                    });
+                } else {
+                    setNotice({
+                        error: false,
+                        msg: 'Data Uploaded Successfully! Check with Administrator for Verification'
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            setNotice({
+                error: true,
+                msg: 'Check Preview First!'
+            });
+        }
     }
 
     const createPreview = () => {
-        setPreview(fields[0].data)
+        setNotice({});
+        if (fields[0].data !== '') {
+            const booleanString = fields.map(elm => {
+                return (
+                    `(${elm.data.split(',').map(e => {
+                        return (`"${e.trim()}"`)
+                    }).join(' OR ')})`
+                )
+            }).join(' AND ');
+            setPreview(booleanString);
+        } else {
+            setPreview('');
+        }
     }
 
     const handleChange = (i, e) => {
         let newValues = [...fields];
-        newValues[i][e.target.name] = e.target.value;
+        newValues[i][e.target.name] = e.target.value.toUpperCase();
         setFields(newValues);
     }
 
@@ -80,10 +100,10 @@ const DataEntry = () => {
                                         </div>
                                         <div className='data-entry-button'>
                                             {
-                                                fields.length !== 1 && <button className='button button-default' onClick={() => removeFormFields(idx)} type='button'>Remove Field</button>
+                                                fields.length !== 1 && <button className='button button-red' onClick={() => removeFormFields(idx)} type='button'>Remove Field</button>
                                             }
                                             {
-                                                fields.length - 1 === idx && <button className='button button-default' onClick={addFormFields} type='button'>Add Field</button>
+                                                fields.length - 1 === idx && <button className='button button-green' onClick={addFormFields} type='button'>Add Field</button>
                                             }
                                         </div>
                                     </div>
@@ -92,7 +112,7 @@ const DataEntry = () => {
                         }
                     </div>
                     <div className='form-control'>
-                        <button className='button button-red' type='button' onClick={createPreview}>Preview</button>
+                        <button className='button button-default' type='button' onClick={createPreview}>Preview</button>
                         <button className='button button-green' type='submit' >Submit</button>
                     </div>
                 </form>
