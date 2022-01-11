@@ -1,5 +1,6 @@
 const fetchApi = async (request, token) => {
-    const url = "http://localhost:8000/api/graphql";
+    //const url = "http://localhost:8000/api/graphql";
+    const url = "http://boolean-string.herokuapp.com/api/graphql";
     const options = {
         method: "POST",
         headers: {
