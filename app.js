@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const { graphqlHTTP } = require('express-graphql');
 
 const db = require('./config/database');
@@ -24,9 +25,15 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use(Auth);
+app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-app.use('/graphql', graphqlHTTP({
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
+});
+
+app.use('/api', Auth);
+
+app.use('/api/graphql', graphqlHTTP({
     schema: graphQlSchema,
     rootValue: graphQlResolver,
     graphiql: true
