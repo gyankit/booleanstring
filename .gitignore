@@ -11,9 +11,6 @@ package-lock.json
 # testing
 /coverage
 
-# production
-/frontend/build
-
 # misc
 .DS_Store
 .env.local
