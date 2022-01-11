@@ -1,11 +1,11 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 
-const db = require('./database');
-const graphQlSchema = require('../graphql/schema/index');
-const graphQlResolver = require('../graphql/resolver/index');
+const db = require('./config/database');
+const graphQlSchema = require('./graphql/schema/index');
+const graphQlResolver = require('./graphql/resolver/index');
 
-const Auth = require('../middleware/auth');
+const Auth = require('./middleware/auth');
 
 const app = express();
 db.connect();
