@@ -34,41 +34,23 @@ body {
   margin: 1rem 2rem;
   padding: 0.5rem 2rem;
   border-radius: 0.5rem;
-  border: 1px solid #e7c69d;
+  border: 0.06rem solid #e7c69d;
   background-color: #20302d;
-  cursor: pointer;
+  cursor: text;
   color: #fff;
   height: 1.5rem;
-  transition: height 1s;
+  transition: height 2s;
 }
 
-.height {
-  height: 6rem;
+.item.height {
+  height: auto;
 }
 
 .item:hover, 
-.item:focus, 
-.item:active {
+.item:focus {
   background-color: #e7c69d; 
   color: #20302d;
   font-weight: 600;
-  height: 6rem;
-}
-
-.item:hover .arrow, 
-.item:focus .arrow, 
-.item:active .arrow {
-  border: solid #20302d;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-.item:hover .content, 
-.item:focus .content, 
-.item:active .content {
-  display: block;
-  visibility: visible;
 }
 
 .dropdown {
@@ -79,6 +61,16 @@ body {
 .dropdown .booleanString, .dropdown button {
   cursor: -webkit-grab;
   cursor: grab;
+}
+
+.content {
+  display: none;
+  visibility: hidden;
+}
+
+.content.visible {
+  display: block;
+  visibility: visible;
 }
 
 .content ul {
@@ -93,29 +85,21 @@ body {
 }
 
 .arrow {
-  padding: 3px;
+  padding: 0.2rem;
   border: solid #fff;
   display: inline-block;
-  border-width: 0 3px 3px 0;
+  border-width: 0 0.2rem 0.2rem 0;
   margin-left: 1rem;
+  cursor: pointer;
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
 
-.down {
+.arrow.down {
   -webkit-transform: rotate(45deg) !important;
   transform: rotate(45deg) !important;
 }
 
-.hidden {
-  display: none;
-  visibility: hidden;
-}
-
-.visible {
-  display: block;
-  visibility: visible;
-}
 
 .header {
   position: fixed;
@@ -160,7 +144,8 @@ body {
 }
 
 .header-navbar a:hover, .header-navbar a:active,
-.header-navbar li:hover, .header-navbar li:active {
+.header-navbar li:hover, .header-navbar li:active,
+.header-navbar li>button:hover, .header-navbar li>button:active {
   color: #e7aa5f;
   font-weight: 400;
 }
@@ -169,11 +154,31 @@ body {
   color: skyblue;
 }
 
+.header-navbar li>button {
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+  color: white;
+  font-weight: 300;
+  font-size: 1rem;
+  margin-left: 0;
+  padding-left: 0;
+  font-family: inherit;
+}
+
+.error-page {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 1rem;
+}
+
 .login {
   width: 30rem;
   max-width: 75%;
   margin: 8rem auto;
-  border: 2px solid #20302d;
+  border: 0.125rem solid #20302d;
   border-radius: .2rem;
   background-color: #20302d;
 }
@@ -208,7 +213,7 @@ label {
 input, textarea, select {
   display: block;
   padding: 0.5rem;
-  border: 1px solid #20302d;
+  border: 0.06rem solid #20302d;
   border-radius: 0.2rem;
 }
 
@@ -218,7 +223,7 @@ input, textarea, select {
 
 .form-control input:hover, .form-control input:active,
 .form-control textarea:hover, .form-control textarea:active {
-  border: 1px solid skyblue;
+  border: 0.06rem solid skyblue;
 }
 
 .select {
@@ -301,7 +306,7 @@ input, textarea, select {
 .button-green {
   color: white;
   background-color: #008000; 
-  box-shadow: 1px 1px 5px #008000;
+  box-shadow: 0.06rem 0.06rem 0.3rem #008000;
 }
 
 .button-green:hover, .button-green:active {
@@ -311,7 +316,7 @@ input, textarea, select {
 .button-red {
   color: white;
   background-color: #e20202; 
-  box-shadow: 1px 1px 5px #e20202;
+  box-shadow: 0.06rem 0.06rem 0.3rem #e20202;
 }
 
 .button-red:hover, .button-red:active {
@@ -321,7 +326,7 @@ input, textarea, select {
 .button-default {
   color: black;
   background-color: #e7aa5f; 
-  box-shadow: 1px 1px 5px #e7aa5f;
+  box-shadow: 0.06rem 0.06rem 0.3rem #e7aa5f;
 }
 
 .button-default:hover, .button-default:active {
@@ -360,7 +365,7 @@ input, textarea, select {
   display: block;
   width: 4rem;
   height: 4rem;
-  margin: 0.5px;
+  margin: 0.03rem;
   border-radius: 50%;
   border: 0.5rem solid #24dae7;
   border-color: #24dae7 transparent #24dae7 transparent;
@@ -379,8 +384,8 @@ input, textarea, select {
 .table {
   width: 100%;
   text-align: center;
-  border-spacing: 0px;
-  border: 1px solid #20302d;
+  border-spacing: 0;
+  border: 0.06rem solid #20302d;
   overflow-x: scroll;
 }
 
@@ -394,4 +399,3 @@ input, textarea, select {
   padding: 1rem;
   height: 2.5rem;
 }
-

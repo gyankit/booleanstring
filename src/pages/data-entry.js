@@ -1,14 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import Heading from '../components/heading'
 import Notification from '../components/notification'
+import Heading from '../components/heading'
+import AuthContext from '../helper/context'
 import fetchApi from '../helper/fetch-api'
 
 const DataEntry = () => {
 
+    const navigate = useNavigate();
+    const context = useContext(AuthContext);
     const [notice, setNotice] = useState({});
     const [preview, setPreview] = useState('');
     const [fields, setFields] = useState([{ data: '' }]);
+
+    useEffect(() => {
+        if (!context.isLoggedIn()) {
+            navigate('/');
+        }
+    }, [context, navigate]);
 
     const formSubmit = async (e) => {
         e.preventDefault();
@@ -24,7 +34,7 @@ const DataEntry = () => {
                 }`
             };
             try {
-                const res = await fetchApi(request);
+                const res = await fetchApi(request, context.getUser('token'));
                 if (res.errors) {
                     setNotice({
                         error: true,

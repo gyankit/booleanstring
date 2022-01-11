@@ -4,12 +4,11 @@ import Notification from '../components/notification'
 import BooleanString from '../components/booleanString'
 import fetchApi from '../helper/fetch-api'
 
-const Home = () => {
+const Home = (props) => {
 
     const [items, setItems] = useState([]);
     const [notice, setNotice] = useState({});
     const [loading, setLoading] = useState(true);
-    // const [search, setSearch] = useState(false);
     const [fields, setFields] = useState([{ data: '' }]);
     const [datas, setDatas] = useState([{ data: '' }]);
 
@@ -87,30 +86,30 @@ const Home = () => {
                         notice.error ?
                             <Notification className={'error'} notice={notice.msg} />
                             : <>
-                                {/* <div className='switch'>
-                                    <button className='button button-default' onClick={() => setSearch(!search)}>{search ? 'Close Search Bar' : 'Open Search Bar'}</button>
-                                </div> */}
-                                <div className='searchform'>
-                                    {
-                                        fields.map((elm, idx) => {
-                                            return (
-                                                <div className='search' key={idx}>
-                                                    <div className='search-input'>
-                                                        <input placeholder='Search Your Boolean String ...' name='data' value={elm.data} onChange={(e) => handleChange(idx, e)} />
+                                {
+                                    props.search &&
+                                    <div className='searchform'>
+                                        {
+                                            fields.map((elm, idx) => {
+                                                return (
+                                                    <div className='search' key={idx}>
+                                                        <div className='search-input'>
+                                                            <input placeholder='Search Your Boolean String ...' name='data' value={elm.data} onChange={(e) => handleChange(idx, e)} />
+                                                        </div>
+                                                        <div className='search-button'>
+                                                            {
+                                                                fields.length !== 1 && <button className='button button-red' onClick={() => removeFormFields(idx)} type='button'>Remove Search Field</button>
+                                                            }
+                                                            {
+                                                                fields.length - 1 === idx && <button className='button button-green' onClick={addFormFields} type='button'>Add Search Field</button>
+                                                            }
+                                                        </div>
                                                     </div>
-                                                    <div className='search-button'>
-                                                        {
-                                                            fields.length !== 1 && <button className='button button-red' onClick={() => removeFormFields(idx)} type='button'>Remove Search Field</button>
-                                                        }
-                                                        {
-                                                            fields.length - 1 === idx && <button className='button button-green' onClick={addFormFields} type='button'>Add Search Field</button>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                }
                                 <div className='list'>
                                     {
                                         items.map((val, key) =>

@@ -1,16 +1,18 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 
 import Notification from './notification'
 import fetchApi from '../helper/fetch-api'
+import AuthContext from '../helper/context'
 
 const Register = (props) => {
 
-    const [notice, setNotice] = useState({});
     const nameRef = useRef(undefined);
     const mobileRef = useRef(undefined);
     const emailRef = useRef(undefined);
     const passwordRef = useRef(undefined);
     const cpasswordRef = useRef(undefined);
+    const context = useContext(AuthContext);
+    const [notice, setNotice] = useState({});
 
     const formSubmit = async (e) => {
         e.preventDefault();
@@ -23,12 +25,19 @@ const Register = (props) => {
                 }`
             }
             try {
-                const res = await fetchApi(request);
+                const res = await fetchApi(request, context.getUser('token'));
                 if (res.errors) {
-                    setNotice({
-                        error: true,
-                        msg: res.errors[0].message
-                    });
+                    if (res.errors[0].message === '401') {
+                        setNotice({
+                            error: true,
+                            msg: "Unauthorized Access"
+                        })
+                    } else {
+                        setNotice({
+                            error: true,
+                            msg: res.errors[0].message
+                        });
+                    }
                 } else {
                     props.onChange();
                 }

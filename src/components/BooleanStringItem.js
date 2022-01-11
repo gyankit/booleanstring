@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 
 import fetchApi from '../helper/fetch-api'
+import AuthContext from '../helper/context'
 
 class BooleanStringItem extends Component {
+
+    static contextType = AuthContext
 
     constructor(props) {
         super();
@@ -21,7 +24,7 @@ class BooleanStringItem extends Component {
                 }
             }
         ` };
-        this.apicall(request, false);
+        this.apicall(request, this.context.getUser('token'), false);
     }
 
     deleteUser = (del) => {
@@ -33,12 +36,12 @@ class BooleanStringItem extends Component {
                 }
             }
         ` };
-        this.apicall(request, true);
+        this.apicall(request, this.context.getUser('token'), true);
     }
 
-    apicall = async (request, reload) => {
+    apicall = async (request, token, reload) => {
         try {
-            const res = await fetchApi(request);
+            const res = await fetchApi(request, token);
             if (res.errors) {
                 console.log(res.errors[0].message)
             } else if (reload) {
@@ -68,12 +71,21 @@ class BooleanStringItem extends Component {
                         })
                     }
                 </td>
-                <td>
-                    <button className={`button ${this.state.val.state ? 'button-green' : ''}`} onClick={() => this.updateActive(!this.state.val.state)}>{this.state.val.state ? 'Enable' : 'Disable'}</button>
-                </td>
-                <td>
-                    <button className='button button-red' disabled={this.state.val.type === 0 || this.state.val.type === 1} onClick={() => this.deleteUser(true)}>Delete</button>
-                </td>
+                {
+                    (this.context.getUser('type') === '1' || this.context.getUser('type') === '0') &&
+                    <>
+                        <td>
+                            <button className={`button ${this.state.val.state ? 'button-green' : ''}`} onClick={this.context.getUser('type') === '2' ? () => { this.props.showError() } : () => this.updateActive(!this.state.val.state)} >
+                                {this.state.val.state ? 'Enable' : 'Disable'}
+                            </button>
+                        </td>
+                        <td>
+                            <button className='button button-red' disabled={this.state.val.type === 0 || this.state.val.type === 1} onClick={this.context.getUser('type') === '2' ? () => { this.props.showError() } : () => this.deleteUser(true)}>
+                                Delete
+                            </button>
+                        </td>
+                    </>
+                }
             </tr >
         )
     }

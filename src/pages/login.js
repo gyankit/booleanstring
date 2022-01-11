@@ -1,17 +1,21 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import Notification from '../components/notification'
+import AuthContext from '../helper/context'
 import fetchApi from '../helper/fetch-api'
 
-const Auth = () => {
+const Login = (props) => {
 
-    const [notice, setNotice] = useState({});
+    const navigate = useNavigate();
+    const context = useContext(AuthContext);
+    const [notice, setNotice] = useState(undefined);
     const emailRef = useRef(undefined);
     const passwordRef = useRef(undefined);
 
     const formSubmit = async (e) => {
         e.preventDefault();
-        setNotice(null);
+        setNotice(undefined);
         const request = {
             query: `query { 
                 login ( email: "${emailRef.current.value}", password: "${passwordRef.current.value}") {
@@ -22,24 +26,27 @@ const Auth = () => {
         try {
             const res = await fetchApi(request);
             if (res.errors) {
-                setNotice({
-                    error: true,
-                    msg: res.errors[0].message
-                });
+                setNotice(res.errors[0].message);
             } else {
-                console.log(res.data.login)
+                props.login(res.data.login);
             }
         } catch (err) {
             console.error(err);
         }
     }
 
+    useEffect(() => {
+        if (context.isLoggedIn()) {
+            navigate('/');
+        }
+    }, [context, navigate]);
+
     return (
         <div className='container'>
             <div className='login'>
                 <h3 className='title'>Sign In</h3>
                 <hr />
-                <Notification className={'error'} notice={notice.msg} />
+                <Notification className={'error'} notice={notice} />
                 <form className='form' onSubmit={formSubmit}>
                     <div className='form-control'>
                         <label htmlFor='email'>Email</label>
@@ -58,6 +65,4 @@ const Auth = () => {
     )
 }
 
-
-
-export default Auth
+export default Login

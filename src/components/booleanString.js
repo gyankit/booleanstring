@@ -14,16 +14,17 @@ const BooleanString = ({ val }) => {
         id === visible ? setVisible(null) : setVisible(id);
     }
 
+    // 
     return (
-        <div className={`item ${visible === val._id && 'height'}`} onClick={(e) => openContentView(val._id)}>
+        <div className={`item ${visible === val._id && 'height'}`} >
             <div className='dropdown' >
                 <div className='booleanString' onClick={(e) => copyToClipBoard(val.booleanString, val._id)}>{val.booleanString}</div>
                 <div>
                     <button onClick={() => copyToClipBoard(val.booleanString, val._id)}>{copy === val._id ? 'Copied' : 'Copy'}</button>
-                    <span className={`arrow ${visible === val._id ? 'down' : 'right'}`}></span>
+                    <span className={`arrow ${visible === val._id && 'down'}`} onClick={(e) => openContentView(val._id)}></span>
                 </div>
             </div>
-            <div className={`content ${visible === val._id ? 'visible' : 'hidden'}`}>
+            <div className={`content ${visible === val._id && 'visible'}`}>
                 <hr></hr>
                 <ul>
                     {

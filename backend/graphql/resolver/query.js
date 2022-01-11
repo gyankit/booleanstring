@@ -7,7 +7,7 @@ const { multiResponse } = require('../../helper/response');
 
 const queryResolver = {
 
-    booleanString: async (args) => {
+    booleanString: async (args, req) => {
         try {
             const booleanString = await BooleanString.find(args);
             return multiResponse(booleanString);
@@ -16,19 +16,26 @@ const queryResolver = {
         }
     },
 
-    user: async (args) => {
+    user: async (args, req) => {
         try {
-            const user = await User.find(args);
-            return multiResponse(user);
+            if (req.isAuth) {
+                if (req.uid === args._id || req.utype === 1 || req.utype === 0) {
+                    const user = await User.find(args);
+                    return multiResponse(user);
+                }
+            }
+            throw new Error(401);
         }
         catch (err) {
             throw err;
         }
     },
 
-    login: async (args) => {
+    login: async (args, req) => {
         try {
-            // let authenticated = false;
+            if (req.isAuth) {
+                throw new Error('Already LoggedIn');
+            }
             const user = await User.findOne({ email: args.email });
             if (!user) {
                 throw new Error('Wrong Email');
@@ -45,7 +52,6 @@ const queryResolver = {
                 type: user.type
             }
             const token = jwt.sign({ data: tokenData }, 'specialsecretkey', { expiresIn: '2h' });
-            // authenticated = true;
             const response = { ...tokenData, token: token, tokenExpire: 2 };
             return response;
         }

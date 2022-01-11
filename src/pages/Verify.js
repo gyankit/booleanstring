@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
+import AuthContext from '../helper/context'
 import Heading from '../components/heading'
 import Notification from '../components/notification'
 import BooleanStringItem from '../components/booleanStringItem'
@@ -7,13 +9,15 @@ import fetchApi from '../helper/fetch-api'
 
 const Verify = () => {
 
+    const navigate = useNavigate();
+    const context = useContext(AuthContext);
     const [items, setItems] = useState([]);
     const [notice, setNotice] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const apiCall = async (request) => {
+    const apiCall = async (request, token) => {
         try {
-            const res = await fetchApi(request);
+            const res = await fetchApi(request, token);
             if (res.errors) {
                 setNotice({
                     error: true,
@@ -46,15 +50,27 @@ const Verify = () => {
     }
 
     useEffect(() => {
-        const request = {
-            query: `query {
-                booleanString {
-                    _id, booleanString, field, state
-                }
-            }`
-        };
-        apiCall(request);
-    }, []);
+        const type = context.getUser('type');
+        if (type === '1' || type === '0' || type === '2') {
+            const request = {
+                query: `query {
+                    booleanString {
+                        _id, booleanString, field, state
+                    }
+                }`
+            };
+            apiCall(request, context.getUser('token'));
+        } else {
+            navigate('/');
+        }
+    }, [context, navigate]);
+
+    const showError = () => {
+        setNotice({
+            error: true,
+            msg: "Unauthorized Access"
+        });
+    }
 
     return (
         <React.Fragment>
@@ -71,14 +87,18 @@ const Verify = () => {
                                         <th>Sl No</th>
                                         <th>Boolean String</th>
                                         <th>Field</th>
-                                        <th>State</th>
-                                        <th>Delete</th>
+                                        {
+                                            context.getUser('type') !== '2' && <>
+                                                <th>State</th>
+                                                <th>Delete</th>
+                                            </>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         items.map((val, key) =>
-                                            <BooleanStringItem key={key} value={val} idx={key} onChange={() => refresh()} />
+                                            <BooleanStringItem key={key} value={val} idx={key} onChange={() => refresh()} showError={showError} />
                                         )
                                     }
                                 </tbody>

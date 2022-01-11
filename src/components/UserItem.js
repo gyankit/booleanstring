@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 
 import fetchApi from '../helper/fetch-api'
+import AuthContext from '../helper/context'
 
 class UserItem extends Component {
+
+    static contextType = AuthContext
 
     constructor(props) {
         super();
@@ -22,7 +25,7 @@ class UserItem extends Component {
                 }
             }
         ` };
-        this.apicall(request, false);
+        this.apicall(request, this.context.getUser('token'), false);
     }
 
     updateType = (type) => {
@@ -34,7 +37,7 @@ class UserItem extends Component {
                 }
             }
         ` };
-        this.apicall(request, false);
+        this.apicall(request, this.context.getUser('token'), false);
     }
 
     deleteUser = (del) => {
@@ -46,12 +49,12 @@ class UserItem extends Component {
                 }
             }
         ` };
-        this.apicall(request, true);
+        this.apicall(request, this.context.getUser('token'), true);
     }
 
-    apicall = async (request, reload) => {
+    apicall = async (request, token, reload) => {
         try {
-            const res = await fetchApi(request);
+            const res = await fetchApi(request, token);
             if (res.errors) {
                 console.log(res.errors[0].message)
             } else if (reload) {
